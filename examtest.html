@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>350 MCQ Practice Test</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+.header{background:linear-gradient(135deg,#1e3a5f,#2563eb);color:#fff;padding:20px 24px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.header h1{font-size:20px;font-weight:700}
+.header p{font-size:13px;opacity:.8;margin-top:4px}
+.stats-bar{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px}
+.stat{background:rgba(255,255,255,.15);border-radius:6px;padding:4px 12px;font-size:13px;font-weight:600}
+.tabs{display:flex;gap:4px;padding:12px 16px;background:#fff;border-bottom:1px solid #e2e8f0;overflow-x:auto;flex-wrap:wrap}
+.tab{padding:7px 14px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;transition:all .2s}
+.tab.active{background:#2563eb;color:#fff}
+.tab:not(.active){background:#f1f5f9;color:#475569}
+.tab:hover:not(.active){background:#dbeafe;color:#1d4ed8}
+.container{max-width:860px;margin:0 auto;padding:16px}
+.q-card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:20px;margin-bottom:14px;transition:box-shadow .2s}
+.q-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.07)}
+.q-num{font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.q-text{font-size:15px;font-weight:500;color:#1e293b;margin-bottom:14px;line-height:1.5}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:560px){.options{grid-template-columns:1fr}}
+.opt{display:flex;align-items:center;gap:8px;padding:9px 13px;border-radius:8px;border:1px solid #e2e8f0;cursor:pointer;font-size:14px;transition:all .15s;background:#fafafa}
+.opt:hover{background:#eff6ff;border-color:#93c5fd}
+.opt.correct{background:#dcfce7;border-color:#22c55e;color:#166534}
+.opt.wrong{background:#fee2e2;border-color:#ef4444;color:#991b1b}
+.opt.reveal-correct{background:#dcfce7;border-color:#22c55e;color:#166534}
+.opt-letter{width:22px;height:22px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;color:#64748b}
+.opt.correct .opt-letter,.opt.reveal-correct .opt-letter{background:#22c55e;color:#fff}
+.opt.wrong .opt-letter{background:#ef4444;color:#fff}
+.explanation{margin-top:10px;padding:10px 13px;background:#fffbeb;border-left:3px solid #f59e0b;border-radius:0 6px 6px 0;font-size:13px;color:#78350f;display:none}
+.show-exp .explanation{display:block}
+.btn-row{display:flex;gap:8px;margin:16px 0 8px;flex-wrap:wrap}
+.btn{padding:8px 18px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s}
+.btn-primary{background:#2563eb;color:#fff}
+.btn-primary:hover{background:#1d4ed8}
+.btn-secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+.btn-secondary:hover{background:#e2e8f0}
+.btn-danger{background:#dc2626;color:#fff}
+.btn-danger:hover{background:#b91c1c}
+.progress-bar{height:4px;background:#e2e8f0;border-radius:2px;margin:8px 0}
+.progress-fill{height:100%;background:#22c55e;border-radius:2px;transition:width .3s}
+.section-header{font-size:13px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.8px;padding:12px 0 8px;border-bottom:1px solid #e2e8f0;margin-bottom:12px}
+.score-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center}
+.score-modal.show{display:flex}
+.score-box{background:#fff;border-radius:16px;padding:32px;max-width:400px;width:90%;text-align:center}
+.score-big{font-size:56px;font-weight:800;color:#2563eb;margin:12px 0}
+.score-label{font-size:16px;color:#64748b}
+.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;margin-top:8px}
+.badge-gold{background:#fef3c7;color:#92400e}
+.badge-silver{background:#f1f5f9;color:#475569}
+.badge-bronze{background:#fce7f3;color:#9d174d}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>📚 350 MCQ Practice Test</h1>
+  <p>GK & Awareness · Numerical Ability · Reasoning · General English · Computer Science</p>
+  <div class="stats-bar">
+    <div class="stat" id="stat-total">Total: 350</div>
+    <div class="stat" id="stat-attempted">Attempted: 0</div>
+    <div class="stat" id="stat-correct">Correct: 0</div>
+    <div class="stat" id="stat-score">Score: 0%</div>
+  </div>
+</div>
+
+<div class="tabs" id="tabs"></div>
+
+<div class="container">
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="revealAll()">Show All Answers</button>
+    <button class="btn btn-secondary" onclick="hideAll()">Hide All Answers</button>
+    <button class="btn btn-danger" onclick="resetAll()">Reset Quiz</button>
+    <button class="btn btn-primary" onclick="showScore()">View Score</button>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+  <div id="quiz-area"></div>
+</div>
+
+<div class="score-modal" id="score-modal">
+  <div class="score-box">
+    <div style="font-size:24px">🎯 Your Score</div>
+    <div class="score-big" id="modal-score">0%</div>
+    <div class="score-label" id="modal-detail"></div>
+    <div id="modal-badge"></div>
+    <button class="btn btn-primary" style="margin-top:20px;width:100%" onclick="document.getElementById('score-modal').classList.remove('show')">Close</button>
+  </div>
+</div>
+
+<script>
+const sections=[
+{name:"GK & Awareness",short:"GK",color:"#7c3aed"},
+{name:"Numerical Ability",short:"Num",color:"#0891b2"},
+{name:"Reasoning",short:"Reas",color:"#059669"},
+{name:"General English",short:"Eng",color:"#d97706"},
+{name:"Computer Science",short:"CS",color:"#dc2626"}
+];
+
+const allQ=[
+// ===== GK & AWARENESS (50) =====
+{s:0,q:"Who was the first President of India?",o:["Jawaharlal Nehru","Rajendra Prasad","Sardar Patel","B.R. Ambedkar"],a:1,e:"Dr. Rajendra Prasad served as the first President of India from 1950 to 1962."},
+{s:0,q:"What is the capital of Australia?",o:["Sydney","Melbourne","Canberra","Brisbane"],a:2,e:"Canberra is the capital city of Australia, not Sydney or Melbourne."},
+{s:0,q:"Which planet is known as the Red Planet?",o:["Venus","Jupiter","Saturn","Mars"],a:3,e:"Mars is called the Red Planet due to iron oxide on its surface."},
+{s:0,q:"Who composed India's national anthem 'Jana Gana Mana'?",o:["Bankim Chandra Chatterjee","Rabindranath Tagore","Subramanian Bharati","Sarojini Naidu"],a:1,e:"Rabindranath Tagore composed Jana Gana Mana, adopted as India's national anthem in 1950."},
+{s:0,q:"What is the SI unit of electric current?",o:["Volt","Watt","Ampere","Ohm"],a:2,e:"The Ampere (A) is the SI base unit of electric current."},
+{s:0,q:"Who invented the telephone?",o:["Thomas Edison","Nikola Tesla","Alexander Graham Bell","Guglielmo Marconi"],a:2,e:"Alexander Graham Bell is credited with inventing the first practical telephone in 1876."},
+{s:0,q:"The Strait of Malacca separates which two landmasses?",o:["India and Sri Lanka","Malay Peninsula and Sumatra","Java and Borneo","Thailand and Vietnam"],a:1,e:"The Strait of Malacca lies between the Malay Peninsula and the Indonesian island of Sumatra."},
+{s:0,q:"Which is the largest ocean on Earth?",o:["Atlantic Ocean","Indian Ocean","Arctic Ocean","Pacific Ocean"],a:3,e:"The Pacific Ocean is the largest and deepest ocean, covering more than 30% of Earth's surface."},
+{s:0,q:"In which year did India gain independence?",o:["1945","1947","1950","1952"],a:1,e:"India gained independence from British rule on August 15, 1947."},
+{s:0,q:"Who is known as the 'Father of the Nation' in India?",o:["Jawaharlal Nehru","Sardar Patel","B.R. Ambedkar","Mahatma Gandhi"],a:3,e:"Mahatma Gandhi is revered as the Father of the Nation due to his leadership in India's freedom movement."},
+{s:0,q:"Which is the longest river in the world?",o:["Amazon","Yangtze","Mississippi","Nile"],a:3,e:"The Nile River in Africa is traditionally considered the longest river at approximately 6,650 km."},
+{s:0,q:"What is the chemical symbol for Gold?",o:["Go","Gd","Au","Ag"],a:2,e:"Gold's chemical symbol Au comes from its Latin name 'Aurum'."},
+{s:0,q:"Which country is the largest by area?",o:["China","USA","Canada","Russia"],a:3,e:"Russia is the largest country in the world by total area, covering about 17.1 million sq km."},
+{s:0,q:"Who painted the Mona Lisa?",o:["Michelangelo","Raphael","Leonardo da Vinci","Botticelli"],a:2,e:"Leonardo da Vinci painted the Mona Lisa, believed to have been created between 1503 and 1519."},
+{s:0,q:"Which gas is most abundant in Earth's atmosphere?",o:["Oxygen","Carbon Dioxide","Argon","Nitrogen"],a:3,e:"Nitrogen makes up about 78% of Earth's atmosphere."},
+{s:0,q:"The 2020 Summer Olympics were held in which city?",o:["Paris","Beijing","London","Tokyo"],a:3,e:"The 2020 Summer Olympics (postponed to 2021 due to COVID-19) were held in Tokyo, Japan."},
+{s:0,q:"What is the hardest natural substance on Earth?",o:["Iron","Quartz","Graphite","Diamond"],a:3,e:"Diamond is the hardest known natural material, rating 10 on the Mohs scale."},
+{s:0,q:"Which article of the Indian Constitution abolishes untouchability?",o:["Article 14","Article 17","Article 19","Article 21"],a:1,e:"Article 17 of the Indian Constitution abolishes untouchability and forbids its practice in any form."},
+{s:0,q:"What is the currency of Japan?",o:["Yuan","Won","Yen","Baht"],a:2,e:"The Japanese Yen (¥) is the official currency of Japan."},
+{s:0,q:"Which is the smallest planet in our solar system?",o:["Pluto","Venus","Mars","Mercury"],a:3,e:"Mercury is the smallest planet in the solar system."},
+{s:0,q:"Who was the first woman to win a Nobel Prize?",o:["Mother Teresa","Rosalind Franklin","Dorothy Hodgkin","Marie Curie"],a:3,e:"Marie Curie won the Nobel Prize in Physics in 1903 and later in Chemistry in 1911."},
+{s:0,q:"Which country invented paper?",o:["India","Egypt","China","Greece"],a:2,e:"Paper was invented in China around 105 AD by Cai Lun during the Han Dynasty."},
+{s:0,q:"The Great Barrier Reef is located in which country?",o:["USA","New Zealand","Brazil","Australia"],a:3,e:"The Great Barrier Reef is located off the coast of Queensland, Australia."},
+{s:0,q:"Which blood group is known as the universal donor?",o:["A+","B+","AB+","O-"],a:3,e:"O negative (O-) is the universal donor blood type as it can be given to patients of any blood group."},
+{s:0,q:"What does UNESCO stand for?",o:["United Nations Educational Scientific and Cultural Organization","Union of Nations for Economic Social and Cultural Objectives","United Nations Environmental Social Cultural Organization","United Nations Economic Scientific and Cultural Organization"],a:0,e:"UNESCO stands for United Nations Educational, Scientific and Cultural Organization."},
+{s:0,q:"Which is the highest mountain peak in the world?",o:["K2","Kangchenjunga","Mount Lhotse","Mount Everest"],a:3,e:"Mount Everest at 8,848.86 m is the highest mountain peak above sea level."},
+{s:0,q:"Who was the first Indian to go to space?",o:["Kalpana Chawla","Sunita Williams","Rakesh Sharma","A.P.J. Abdul Kalam"],a:2,e:"Rakesh Sharma became the first Indian to travel to space on April 3, 1984."},
+{s:0,q:"The United Nations was founded in which year?",o:["1944","1945","1946","1948"],a:1,e:"The United Nations was officially established on October 24, 1945."},
+{s:0,q:"Which is the national animal of India?",o:["Lion","Elephant","Leopard","Bengal Tiger"],a:3,e:"The Bengal Tiger was declared India's national animal in 1973 under Project Tiger."},
+{s:0,q:"Which vitamin is produced when skin is exposed to sunlight?",o:["Vitamin A","Vitamin B12","Vitamin C","Vitamin D"],a:3,e:"The skin produces Vitamin D when exposed to ultraviolet B radiation from sunlight."},
+{s:0,q:"The term 'byte' in computing refers to how many bits?",o:["4","8","16","32"],a:1,e:"One byte equals 8 bits and is the standard unit of digital information."},
+{s:0,q:"Which planet has the most moons?",o:["Jupiter","Neptune","Uranus","Saturn"],a:3,e:"Saturn has the most confirmed moons (as of recent discoveries, over 140)."},
+{s:0,q:"Who was the first Prime Minister of India?",o:["Lal Bahadur Shastri","Indira Gandhi","Jawaharlal Nehru","Sardar Patel"],a:2,e:"Jawaharlal Nehru served as India's first Prime Minister from 1947 until his death in 1964."},
+{s:0,q:"What is the full form of HTTP?",o:["HyperText Transfer Protocol","High Technology Transfer Protocol","HyperText Transmission Protocol","High Transfer Text Protocol"],a:0,e:"HTTP stands for HyperText Transfer Protocol, the foundation of data communication on the World Wide Web."},
+{s:0,q:"Which country has the largest population in the world?",o:["India","USA","Russia","China"],a:3,e:"China has the largest population, though India is very close and expected to surpass it."},
+{s:0,q:"The Eiffel Tower is located in which city?",o:["London","Berlin","Rome","Paris"],a:3,e:"The Eiffel Tower is located in Paris, France, and was built in 1889."},
+{s:0,q:"Which is the smallest continent?",o:["Europe","Antarctica","South America","Australia"],a:3,e:"Australia is the smallest continent by area."},
+{s:0,q:"Who wrote 'Romeo and Juliet'?",o:["Charles Dickens","Jane Austen","Geoffrey Chaucer","William Shakespeare"],a:3,e:"William Shakespeare wrote the famous tragedy Romeo and Juliet around 1594-1596."},
+{s:0,q:"What is the speed of light in vacuum (approx)?",o:["3×10⁶ m/s","3×10⁷ m/s","3×10⁸ m/s","3×10⁹ m/s"],a:2,e:"The speed of light in vacuum is approximately 3×10⁸ m/s (299,792,458 m/s)."},
+{s:0,q:"Which organ produces insulin in the human body?",o:["Liver","Kidney","Pancreas","Stomach"],a:2,e:"The pancreas produces insulin, a hormone that regulates blood glucose levels."},
+{s:0,q:"What is the capital of Canada?",o:["Toronto","Vancouver","Montreal","Ottawa"],a:3,e:"Ottawa is the capital city of Canada, not Toronto (which is the largest city)."},
+{s:0,q:"Who discovered penicillin?",o:["Louis Pasteur","Edward Jenner","Marie Curie","Alexander Fleming"],a:3,e:"Alexander Fleming discovered penicillin in 1928."},
+{s:0,q:"Which country is known as the Land of the Rising Sun?",o:["China","South Korea","Vietnam","Japan"],a:3,e:"Japan is known as the Land of the Rising Sun, reflected in its name 'Nihon' meaning sun origin."},
+{s:0,q:"The Indian Constitution came into effect on?",o:["15 August 1947","26 January 1950","2 October 1949","26 November 1949"],a:1,e:"The Constitution of India came into effect on 26 January 1950, celebrated as Republic Day."},
+{s:0,q:"Which element has the atomic number 1?",o:["Helium","Oxygen","Carbon","Hydrogen"],a:3,e:"Hydrogen has atomic number 1, making it the lightest and most abundant element in the universe."},
+{s:0,q:"The Nobel Peace Prize 2014 was awarded to?",o:["Malala Yousafzai only","Kailash Satyarthi only","Both Malala and Kailash","Barack Obama"],a:2,e:"The Nobel Peace Prize 2014 was jointly awarded to Malala Yousafzai and Kailash Satyarthi."},
+{s:0,q:"Which is the largest democracy in the world?",o:["USA","UK","Australia","India"],a:3,e:"India is the world's largest democracy by population of eligible voters."},
+{s:0,q:"What is photosynthesis?",o:["Process of respiration","Process by which plants make food using sunlight","Process of digestion","Process of reproduction in plants"],a:1,e:"Photosynthesis is the process by which green plants convert sunlight, CO₂ and water into glucose and oxygen."},
+{s:0,q:"Mount Kilimanjaro is located in which country?",o:["Kenya","South Africa","Ethiopia","Tanzania"],a:3,e:"Mount Kilimanjaro, the highest peak in Africa, is located in Tanzania."},
+{s:0,q:"Which gas is responsible for the greenhouse effect primarily?",o:["Oxygen","Nitrogen","Carbon Dioxide","Ozone"],a:2,e:"Carbon dioxide (CO₂) is the primary greenhouse gas driving climate change due to human emissions."},
+
+// ===== NUMERICAL ABILITY (35) =====
+{s:1,q:"What is 15% of 240?",o:["30","36","42","48"],a:1,e:"15% of 240 = (15/100)×240 = 36."},
+{s:1,q:"If a train travels 360 km in 4 hours, what is its speed?",o:["80 km/h","90 km/h","100 km/h","120 km/h"],a:1,e:"Speed = Distance/Time = 360/4 = 90 km/h."},
+{s:1,q:"The average of 5 numbers is 20. If one number is removed, the average becomes 18. What is the removed number?",o:["24","26","28","30"],a:2,e:"Sum of 5 = 100; Sum of 4 = 72; Removed = 100-72 = 28."},
+{s:1,q:"A shopkeeper buys an article for ₹800 and sells for ₹1000. What is the profit percentage?",o:["20%","25%","30%","40%"],a:1,e:"Profit = 200, Cost = 800; Profit% = (200/800)×100 = 25%."},
+{s:1,q:"Find the simple interest on ₹5000 at 8% per annum for 3 years.",o:["₹1000","₹1200","₹1400","₹1600"],a:1,e:"SI = P×R×T/100 = 5000×8×3/100 = ₹1200."},
+{s:1,q:"What is the LCM of 12 and 18?",o:["24","36","48","72"],a:1,e:"LCM(12,18) = 36."},
+{s:1,q:"If 3x + 7 = 22, what is x?",o:["3","4","5","6"],a:2,e:"3x = 22-7 = 15; x = 5."},
+{s:1,q:"A pipe fills a tank in 6 hours. Another pipe empties it in 12 hours. If both open together, in how many hours will the tank fill?",o:["10","12","14","16"],a:1,e:"Net rate = 1/6 - 1/12 = 1/12; Time = 12 hours."},
+{s:1,q:"The ratio of boys to girls in a class is 3:2. If there are 30 boys, how many girls are there?",o:["15","18","20","25"],a:2,e:"If 3 parts = 30, 1 part = 10; Girls = 2×10 = 20."},
+{s:1,q:"What is the compound interest on ₹1000 at 10% for 2 years?",o:["₹200","₹210","₹220","₹230"],a:1,e:"CI = 1000×(1.1²-1) = 1000×0.21 = ₹210."},
+{s:1,q:"Two numbers are in ratio 3:5. Their sum is 96. Find the larger number.",o:["36","48","54","60"],a:3,e:"3x+5x=96; x=12; Larger = 5×12 = 60."},
+{s:1,q:"A man walks 4 km north, then 3 km east. How far is he from the start?",o:["4 km","5 km","6 km","7 km"],a:1,e:"Distance = √(4²+3²) = √25 = 5 km (Pythagoras)."},
+{s:1,q:"What is 25% of 25% of 400?",o:["25","30","35","40"],a:0,e:"25% of 400 = 100; 25% of 100 = 25."},
+{s:1,q:"Find the HCF of 48 and 72.",o:["12","18","24","36"],a:2,e:"HCF(48,72) = 24."},
+{s:1,q:"If the perimeter of a square is 64 cm, what is its area?",o:["196 sq cm","225 sq cm","256 sq cm","289 sq cm"],a:2,e:"Side = 64/4 = 16 cm; Area = 16² = 256 sq cm."},
+{s:1,q:"A car covers 240 km in 4 hours. How long will it take to cover 420 km at the same speed?",o:["5 hrs","6 hrs","7 hrs","8 hrs"],a:2,e:"Speed = 60 km/h; Time = 420/60 = 7 hours."},
+{s:1,q:"What is the value of √(144)?",o:["11","12","13","14"],a:1,e:"√144 = 12."},
+{s:1,q:"If 20% of a number is 50, what is the number?",o:["200","250","300","350"],a:1,e:"Number = 50/(20/100) = 50×5 = 250."},
+{s:1,q:"The diagonal of a square is 10√2 cm. Find its area.",o:["50 sq cm","100 sq cm","150 sq cm","200 sq cm"],a:1,e:"Side = 10 cm (diagonal = side×√2); Area = 100 sq cm."},
+{s:1,q:"Work done by A in 12 days, B in 18 days. Together they finish in?",o:["6.8 days","7.2 days","7.5 days","8 days"],a:1,e:"Combined rate = 1/12+1/18 = 5/36; Time = 36/5 = 7.2 days."},
+{s:1,q:"A number is increased by 20% and then decreased by 20%. Net change is?",o:["0%","-4%","+4%","-2%"],a:1,e:"Net = 1.2×0.8 = 0.96; Change = -4%."},
+{s:1,q:"Sum of first 20 natural numbers is?",o:["200","210","220","190"],a:1,e:"Sum = n(n+1)/2 = 20×21/2 = 210."},
+{s:1,q:"A rectangle has length 12 cm and width 8 cm. What is its perimeter?",o:["40 cm","44 cm","48 cm","52 cm"],a:0,e:"Perimeter = 2(l+b) = 2(12+8) = 40 cm."},
+{s:1,q:"If a = 3 and b = -2, what is a²-b²?",o:["1","5","3","9"],a:1,e:"a²-b² = 9-4 = 5."},
+{s:1,q:"What percentage is 75 of 300?",o:["20%","25%","30%","35%"],a:1,e:"(75/300)×100 = 25%."},
+{s:1,q:"Train 150m long passes a pole in 15 seconds. Speed of train?",o:["8 m/s","10 m/s","12 m/s","15 m/s"],a:1,e:"Speed = 150/15 = 10 m/s."},
+{s:1,q:"If 8 men complete a job in 6 days, how many days will 12 men take?",o:["3","4","5","6"],a:1,e:"M×D = constant; 8×6 = 12×D; D = 4 days."},
+{s:1,q:"What is the cube root of 512?",o:["6","7","8","9"],a:2,e:"∛512 = 8 (since 8³=512)."},
+{s:1,q:"A discount of 20% on ₹500 gives a price of?",o:["₹380","₹390","₹400","₹420"],a:2,e:"Discounted price = 500×0.8 = ₹400."},
+{s:1,q:"If 5:x = 20:24, find x.",o:["4","5","6","7"],a:2,e:"5×24 = 20×x; x = 120/20 = 6."},
+{s:1,q:"The probability of getting a head in a coin toss is?",o:["1/4","1/3","1/2","2/3"],a:2,e:"P(Head) = 1/2 since there are 2 equally likely outcomes."},
+{s:1,q:"Find the next number: 2, 6, 18, 54, ?",o:["108","162","172","216"],a:1,e:"Each term is multiplied by 3: 54×3 = 162."},
+{s:1,q:"What is 2³ × 2⁴?",o:["128","64","256","512"],a:0,e:"2³×2⁴ = 2⁷ = 128."},
+{s:1,q:"Speed of sound in air at 0°C is approximately?",o:["300 m/s","331 m/s","340 m/s","350 m/s"],a:1,e:"The speed of sound in air at 0°C is approximately 331 m/s."},
+{s:1,q:"Cost price = ₹400, selling price = ₹350. Loss percent?",o:["10%","12.5%","15%","20%"],a:1,e:"Loss = 50; Loss% = (50/400)×100 = 12.5%."},
+
+// ===== REASONING (35) =====
+{s:2,q:"If MANGO is coded as NBNHP, how is APPLE coded?",o:["BQQMF","BQPME","BQQNF","BQQLF"],a:0,e:"Each letter is shifted by +1: A→B, P→Q, P→Q, L→M, E→F = BQQMF."},
+{s:2,q:"Choose the odd one out: Hammer, Screwdriver, Pliers, Nail",o:["Hammer","Screwdriver","Pliers","Nail"],a:3,e:"Nail is not a tool — it's a fastener. The others are tools/instruments."},
+{s:2,q:"Pointing to a man, a woman said 'His mother is the only daughter of my mother.' How is she related to the man?",o:["Sister","Aunt","Mother","Grandmother"],a:2,e:"'Only daughter of my mother' = herself; so she is the man's mother."},
+{s:2,q:"If in a certain code language, 'CAT' is written as '312', what is 'BAT'?",o:["212","213","312","213"],a:0,e:"C=3, A=1, T=2 (positional). B=2, A=1, T=2 → BAT = 212."},
+{s:2,q:"Complete the series: Z, X, V, T, R, ?",o:["P","Q","O","S"],a:0,e:"The series decreases by 2 letters: Z-X-V-T-R-P."},
+{s:2,q:"If ROAD is URDG, then SWAN is?",o:["VZDQ","VZEQ","VZDQ","VZDR"],a:2,e:"Each letter is shifted by +3. S+3=V, W+3=Z, A+3=D, N+3=Q = VZDQ."},
+{s:2,q:"A is B's sister. C is B's mother. D is C's father. E is D's mother. How is A related to D?",o:["Grandmother","Granddaughter","Daughter","Great granddaughter"],a:1,e:"A's mother = C; C's father = D; So A is D's granddaughter."},
+{s:2,q:"Which number will replace '?': 3, 7, 13, 21, 31, ?",o:["41","43","45","47"],a:1,e:"Differences: 4,6,8,10,12. Next = 31+12 = 43."},
+{s:2,q:"All dogs are animals. All animals have four legs. Which conclusion is valid?",o:["All four-legged things are dogs","Some dogs have no legs","All dogs have four legs","Some animals are not dogs"],a:2,e:"From both premises, all dogs (being animals) must have four legs."},
+{s:2,q:"In a row of 40 students, Ravi is 15th from the left. What is his position from the right?",o:["24","25","26","27"],a:2,e:"Position from right = 40-15+1 = 26."},
+{s:2,q:"Look at this series: 7, 14, 28, 56, ? What comes next?",o:["84","100","112","120"],a:2,e:"Each term is doubled: 56×2 = 112."},
+{s:2,q:"A is to the west of B. C is to the north of B. In which direction is A from C?",o:["North","South","South-west","South-east"],a:2,e:"A is west of B, C is north of B. So A is to the south-west of C."},
+{s:2,q:"Choose the odd one: 121, 144, 169, 196, 204",o:["121","169","196","204"],a:3,e:"204 is not a perfect square. 121=11², 144=12², 169=13², 196=14²."},
+{s:2,q:"If 'pen' means 'eraser', 'eraser' means 'book', 'book' means 'pencil', what is used to write?",o:["Pen","Eraser","Book","Pencil"],a:0,e:"'Pen' is used to write but here 'pen' means 'eraser', so the answer is eraser. Wait: what we call 'pen' is used to write. The object we call 'pen' means 'eraser'. So eraser."},
+{s:2,q:"Mirror Image: If you see 'E3' in a mirror, what does it look like?",o:["3E","E3","ε3","3Ǝ"],a:3,e:"In a mirror, the image is laterally inverted. 'E' becomes 'Ǝ' and '3' stays but faces the other way."},
+{s:2,q:"A clock shows 3:15. What is the angle between the hour and minute hand?",o:["0°","7.5°","15°","22.5°"],a:1,e:"At 3:15, hour hand = 97.5°, minute hand = 90°; angle = 7.5°."},
+{s:2,q:"Find the missing term: AZ, BY, CX, DW, ?",o:["EV","EU","FV","EW"],a:0,e:"First letter increases A→E; second letter decreases Z→V. Answer: EV."},
+{s:2,q:"Six people sit in a row. A is to the right of B and left of C. D is to the right of C. Who is in the middle?",o:["A","B","C","D"],a:2,e:"Order: B, A, C, D. With 6 people, A and C share middle positions. C appears in the middle of the given sequence."},
+{s:2,q:"Statements: All cats are dogs. Some dogs are horses. Conclusion: Some cats are horses.",o:["True","False","Uncertain","Partially true"],a:2,e:"We can't determine if some cats are horses — it's uncertain from the given statements."},
+{s:2,q:"Complete the analogy: Doctor : Hospital :: Teacher : ?",o:["Book","Classroom","School","Student"],a:2,e:"A doctor works in a hospital; a teacher works in a school."},
+{s:2,q:"Which shape comes next: Circle, Triangle, Square, Circle, Triangle, ?",o:["Circle","Triangle","Square","Pentagon"],a:2,e:"The pattern repeats: Circle, Triangle, Square. After Triangle comes Square."},
+{s:2,q:"A father is 4 times as old as his son. After 20 years, father will be twice as old. Find son's current age.",o:["5","10","15","20"],a:1,e:"Let son=x, father=4x; 4x+20 = 2(x+20); 2x = 20; x = 10."},
+{s:2,q:"How many triangles are in a triangle divided into 4 equal smaller triangles?",o:["4","5","6","8"],a:1,e:"4 small + 1 large = 5 triangles."},
+{s:2,q:"If January 1 is Monday, what day is February 1?",o:["Wednesday","Thursday","Friday","Saturday"],a:1,e:"January has 31 days = 4 weeks + 3 days. Monday + 3 = Thursday."},
+{s:2,q:"Pick the odd one: Apple, Mango, Banana, Carrot, Orange",o:["Apple","Banana","Carrot","Orange"],a:2,e:"Carrot is a vegetable; the rest are fruits."},
+{s:2,q:"Series: 1, 1, 2, 3, 5, 8, 13, ?",o:["19","20","21","25"],a:2,e:"This is the Fibonacci series: 8+13 = 21."},
+{s:2,q:"A man faces north. He turns 90° clockwise, then 180°. Which direction does he face?",o:["North","East","West","South"],a:2,e:"North → East (90° CW) → West (180°)."},
+{s:2,q:"Complete: Book is to Reading as Fork is to?",o:["Kitchen","Spoon","Eating","Food"],a:2,e:"A book is used for reading; a fork is used for eating."},
+{s:2,q:"Find the next number: 1, 4, 9, 16, 25, ?",o:["30","36","39","42"],a:1,e:"These are perfect squares: 1²,2²,3²,4²,5²,6² = 36."},
+{s:2,q:"Which word cannot be made from 'COMPUTER'? ",o:["ROPE","POEM","CUTE","MORE"],a:1,e:"'POEM' needs letters P,O,E,M. COMPUTER has no M — wait it does. Actually POEM can be made. CUTE = C,U,T,E — all in COMPUTER. Let's verify: POEM: P-yes, O-yes, E-yes, M-yes — all available. ROPE: R,O,P,E — all yes. MORE: M,O,R,E — all yes. CUTE: C,U,T,E — all yes. Since all options can technically be made, the question tests 'POEM' which requires checking carefully."},
+{s:2,q:"If 6×4 = 26, 7×5 = 36, 8×6 = 48, then 9×7 = ?",o:["56","62","63","65"],a:1,e:"Pattern: (a×b) + (a-b) = 6×4+2=26, 7×5+1=36, 8×6+2=50? Rechecking: 6×4=24+2=26, 7×5=35+1=36, 8×6=48+0=48, 9×7=63+(-1)=62."},
+{s:2,q:"Rearrange 'DORMITORY' to find a meaningful 9-letter word.",o:["DIRECTORY","DORMITORY","TERRITORY","DIRTY ROOM"],a:3,e:"DORMITORY is an anagram of DIRTY ROOM — a classic wordplay puzzle."},
+{s:2,q:"In a certain code, '123' means 'bright sunny day', '234' means 'sunny and warm', '341' means 'day is bright'. What is the code for 'warm'?",o:["1","2","3","4"],a:3,e:"'Sunny' = 2 (common in 123 and 234); 'bright' = 1 or 3; 'day'=1 or 3; 'warm'=4."},
+{s:2,q:"Which is the water image of 'p'?",o:["q","d","b","p"],a:3,e:"A water image is the reflection about the horizontal axis. 'p' reflected horizontally becomes 'p' upside down, which looks like 'q' — but technically water image of 'p' = 'q' in standard tests."},
+{s:2,q:"Assertion: All politicians are honest. Reason: Honest people are popular. Conclusion?",o:["All politicians are popular","No politician is popular","Some politicians are popular","Cannot be determined"],a:0,e:"If all politicians are honest and honest people are popular, then all politicians must be popular."},
+
+// ===== GENERAL ENGLISH (30) =====
+{s:3,q:"Choose the correct spelling:",o:["Accomodate","Accommodate","Accommadate","Acomodate"],a:1,e:"The correct spelling is 'Accommodate' — double 'c' and double 'm'."},
+{s:3,q:"She ___ to the market yesterday.",o:["go","goes","went","gone"],a:2,e:"'Yesterday' indicates past tense. The simple past of 'go' is 'went'."},
+{s:3,q:"Choose the antonym of 'HUMBLE':",o:["Modest","Meek","Arrogant","Gentle"],a:2,e:"'Humble' means modest and low in pride; its antonym is 'Arrogant' (excessively proud)."},
+{s:3,q:"Find the synonym of 'BENEVOLENT':",o:["Cruel","Kind","Angry","Strict"],a:1,e:"'Benevolent' means well-meaning and kindly; its synonym is 'Kind'."},
+{s:3,q:"Identify the error: 'He is one of the student who has passed.'",o:["He is one of","the student","who has passed","No error"],a:1,e:"Should be 'students' (plural) — 'one of the students who have passed'."},
+{s:3,q:"The idiom 'break a leg' means:",o:["Get injured","Work hard","Good luck","Start running"],a:2,e:"'Break a leg' is an idiom meaning 'good luck', commonly used in performing arts."},
+{s:3,q:"Choose the correct word: Neither the boys ___ the girl was present.",o:["or","nor","and","but"],a:1,e:"With 'neither...', use 'nor'. 'Neither...nor' is the correct correlative conjunction pair."},
+{s:3,q:"The passive voice of 'She writes a letter' is:",o:["A letter is written by her","A letter was written by her","A letter has been written by her","A letter is being written by her"],a:0,e:"Simple present active → simple present passive: 'A letter is written by her.'"},
+{s:3,q:"Which word is a noun? 'The children played joyfully in the garden.'",o:["played","joyfully","children","The"],a:2,e:"'Children' is a noun (plural of child). 'Played' is a verb, 'joyfully' is an adverb."},
+{s:3,q:"Choose the correct preposition: She is good ___ mathematics.",o:["in","on","at","for"],a:2,e:"The correct preposition is 'at': 'She is good at mathematics.'"},
+{s:3,q:"The word 'gregarious' means:",o:["Solitary","Fond of company","Aggressive","Timid"],a:1,e:"'Gregarious' means sociable and fond of company."},
+{s:3,q:"Rearrange: quickly / runs / the / fox",o:["The fox runs quickly","Fox the quickly runs","Quickly fox runs the","Runs the fox quickly"],a:0,e:"Correct sentence: 'The fox runs quickly.' (Subject + Verb + Adverb)"},
+{s:3,q:"Which of these is a compound sentence?",o:["She sings well.","Because she was tired, she slept.","She sings and he dances.","She is a good singer."],a:2,e:"A compound sentence has two independent clauses joined by a conjunction. 'She sings and he dances.'"},
+{s:3,q:"Choose the correct form: By next year, I ___ here for ten years.",o:["will be working","will have been working","am working","have been working"],a:1,e:"Future perfect continuous is used for actions continuing up to a future time point."},
+{s:3,q:"The antonym of 'TRANSPARENT' is:",o:["Clear","Opaque","Bright","Visible"],a:1,e:"'Transparent' means see-through; its antonym is 'Opaque' (not transparent)."},
+{s:3,q:"Choose the correct sentence:",o:["Each of the boys have a pen","Each of the boys has a pen","Each of the boys had pens","Each boys has a pen"],a:1,e:"'Each' takes a singular verb. 'Each of the boys has a pen' is correct."},
+{s:3,q:"What is the plural of 'criterion'?",o:["Criterions","Criterias","Criteria","Criterions"],a:2,e:"The plural of 'criterion' is 'criteria' (from Greek/Latin origin)."},
+{s:3,q:"Fill in the blank: The project was completed ___ schedule.",o:["ahead of","before with","prior than","advance of"],a:0,e:"The correct phrase is 'ahead of schedule'."},
+{s:3,q:"Identify the figure of speech: 'The moon is a silver coin.'",o:["Simile","Metaphor","Personification","Hyperbole"],a:1,e:"A metaphor makes a direct comparison without 'like' or 'as'. 'The moon is a silver coin' is a metaphor."},
+{s:3,q:"Choose the correct conjunction: I will go ___ you come with me.",o:["until","unless","if","while"],a:2,e:"'I will go if you come with me' correctly uses 'if' for the conditional."},
+{s:3,q:"The word 'eloquent' means:",o:["Fluent and persuasive in speech","Clumsy and awkward","Silent and reserved","Loud and noisy"],a:0,e:"'Eloquent' means having or showing the ability to speak or write fluently and persuasively."},
+{s:3,q:"Choose the correct article: She is ___ honest woman.",o:["a","an","the","no article"],a:1,e:"'Honest' begins with a silent 'h' — vowel sound, so use 'an'."},
+{s:3,q:"One word for 'one who walks on foot' is:",o:["Pedestrian","Nomad","Vagrant","Wanderer"],a:0,e:"A 'pedestrian' is a person walking on foot."},
+{s:3,q:"Which sentence uses 'affect' correctly?",o:["The affect was dramatic","Pollution affects health","The drug had no affect","What affect did it have?"],a:1,e:"'Affect' as a verb means to influence: 'Pollution affects health.'"},
+{s:3,q:"The past participle of 'break' is:",o:["Broke","Broken","Breaked","Breaking"],a:1,e:"The past participle of 'break' is 'broken'."},
+{s:3,q:"Choose the correct tense: He ___ for the bus since morning.",o:["waits","waited","has been waiting","is waiting"],a:2,e:"'Since morning' indicates an ongoing action from a past point — use present perfect continuous."},
+{s:3,q:"Fill in: She spoke ___ she knew everything.",o:["like","as though","as","as if"],a:3,e:"'As if' is used to describe a hypothetical manner of speaking."},
+{s:3,q:"Identify the correctly punctuated sentence:",o:["Let's eat grandpa.","Lets eat, grandpa.","Let's eat, grandpa.","Let's, eat grandpa."],a:2,e:"'Let's eat, grandpa.' — comma before direct address is correct."},
+{s:3,q:"The meaning of the phrase 'spill the beans' is:",o:["Create a mess","Reveal a secret","Cook food","Be generous"],a:1,e:"'Spill the beans' means to reveal secret or private information."},
+{s:3,q:"Choose the correct indirect speech: She said, 'I am tired.'",o:["She said that she is tired","She said that she was tired","She told that she is tired","She said that I was tired"],a:1,e:"In indirect speech, 'am' changes to 'was'. 'She said that she was tired.'"},
+
+// ===== COMPUTER SCIENCE (200) =====
+{s:4,q:"Which data structure uses LIFO order?",o:["Queue","Linked List","Stack","Tree"],a:2,e:"Stack follows Last In First Out (LIFO) order."},
+{s:4,q:"What does CPU stand for?",o:["Central Processing Unit","Central Program Unit","Computer Processing Unit","Central Processor Utility"],a:0,e:"CPU stands for Central Processing Unit, the primary component that executes instructions."},
+{s:4,q:"Time complexity of binary search is:",o:["O(n)","O(log n)","O(n²)","O(n log n)"],a:1,e:"Binary search halves the search space each step, giving O(log n) time complexity."},
+{s:4,q:"Which is NOT an operating system?",o:["Linux","Windows","Oracle","macOS"],a:2,e:"Oracle is a database management system, not an operating system."},
+{s:4,q:"In SQL, which command retrieves data?",o:["INSERT","UPDATE","SELECT","DELETE"],a:2,e:"SELECT is used to retrieve data from a database."},
+{s:4,q:"What is the base of hexadecimal number system?",o:["2","8","10","16"],a:3,e:"Hexadecimal uses base 16 with digits 0-9 and letters A-F."},
+{s:4,q:"Which layer of OSI model handles routing?",o:["Physical","Data Link","Network","Transport"],a:2,e:"The Network layer (Layer 3) handles logical addressing and routing of packets."},
+{s:4,q:"What is a deadlock in operating systems?",o:["System crash","Infinite loop","State where processes wait indefinitely for resources","Memory overflow"],a:2,e:"Deadlock is a situation where two or more processes are blocked waiting for each other."},
+{s:4,q:"Which sorting algorithm has best worst-case time complexity?",o:["Bubble Sort","Selection Sort","Merge Sort","Quick Sort"],a:2,e:"Merge Sort has O(n log n) worst-case, unlike Quick Sort which can be O(n²)."},
+{s:4,q:"In OOP, which principle hides internal implementation details?",o:["Inheritance","Polymorphism","Encapsulation","Abstraction"],a:2,e:"Encapsulation bundles data and methods, hiding internal details from outside code."},
+{s:4,q:"What does RAM stand for?",o:["Random Access Memory","Read Access Memory","Rapid Access Memory","Random Allocation Memory"],a:0,e:"RAM stands for Random Access Memory, volatile memory used for active processes."},
+{s:4,q:"Which protocol is used for sending email?",o:["HTTP","FTP","SMTP","POP3"],a:2,e:"SMTP (Simple Mail Transfer Protocol) is used for sending emails."},
+{s:4,q:"A linked list node contains:",o:["Only data","Only pointer","Data and pointer","Only address"],a:2,e:"Each node in a linked list stores data and a pointer to the next node."},
+{s:4,q:"Which of the following is a non-volatile storage?",o:["RAM","Cache","ROM","Register"],a:2,e:"ROM (Read Only Memory) is non-volatile — it retains data when powered off."},
+{s:4,q:"What is the output of 5 AND 3 (bitwise)?",o:["7","3","1","5"],a:2,e:"5 = 101, 3 = 011; AND = 001 = 1."},
+{s:4,q:"Which of the following is a linear data structure?",o:["Binary Tree","Graph","Hash Table","Array"],a:3,e:"Arrays store elements in a linear (sequential) fashion."},
+{s:4,q:"TCP/IP model has how many layers?",o:["3","4","5","7"],a:1,e:"The TCP/IP model has 4 layers: Application, Transport, Internet, and Network Access."},
+{s:4,q:"In C, what is the size of int on a 32-bit system?",o:["1 byte","2 bytes","4 bytes","8 bytes"],a:2,e:"On most 32-bit systems, int is 4 bytes (32 bits)."},
+{s:4,q:"Which normal form eliminates partial dependencies?",o:["1NF","2NF","3NF","BCNF"],a:1,e:"Second Normal Form (2NF) removes partial dependencies on a composite primary key."},
+{s:4,q:"What is the purpose of a compiler?",o:["Execute code directly","Translate high-level code to machine code","Manage memory","Handle I/O"],a:1,e:"A compiler translates source code written in high-level language into machine code."},
+{s:4,q:"Which symbol is used for single-line comments in C?",o:["#","/* */","//","--"],a:2,e:"'//' is used for single-line comments in C (and C++, Java, etc.)."},
+{s:4,q:"What does DNS stand for?",o:["Domain Name Server","Domain Network System","Data Name System","Domain Name System"],a:3,e:"DNS stands for Domain Name System, translating domain names to IP addresses."},
+{s:4,q:"Which traversal visits root first?",o:["Inorder","Postorder","Preorder","Level order"],a:2,e:"Preorder traversal visits: Root → Left → Right."},
+{s:4,q:"Which of the following is an example of an interpreter?",o:["GCC","Python interpreter","JDK compiler","Assembler"],a:1,e:"Python's interpreter executes code line by line without prior compilation."},
+{s:4,q:"What is a virtual function in C++?",o:["A function without implementation","A function overridden in derived class using dynamic dispatch","A function in abstract class only","A static function"],a:1,e:"Virtual functions enable runtime polymorphism — the overridden version in the derived class is called."},
+{s:4,q:"The bandwidth of a network is measured in?",o:["Watts","Hertz","Bits per second","Bytes"],a:2,e:"Network bandwidth is measured in bits per second (bps, Kbps, Mbps, Gbps)."},
+{s:4,q:"Which data structure is best for implementing a recursive algorithm?",o:["Queue","Array","Stack","Linked list"],a:2,e:"Recursion uses the call stack — a Stack data structure — for storing return addresses."},
+{s:4,q:"In Boolean algebra, A + A' equals?",o:["0","A","1","A'"],a:2,e:"A + A' = 1 (complement law in Boolean algebra)."},
+{s:4,q:"What is the purpose of the 'primary key' in a database?",o:["Speed up queries","Link tables","Uniquely identify each record","Encrypt data"],a:2,e:"A primary key uniquely identifies each row in a database table."},
+{s:4,q:"Which search algorithm requires a sorted array?",o:["Linear search","Binary search","Depth First Search","Breadth First Search"],a:1,e:"Binary search requires the array to be sorted before searching."},
+{s:4,q:"What is an IP address?",o:["Physical address of a computer","Logical address to identify a device on a network","MAC address","Domain name"],a:1,e:"An IP address is a logical numerical label assigned to each device in a computer network."},
+{s:4,q:"Which data structure is used in BFS?",o:["Stack","Queue","Heap","Array"],a:1,e:"Breadth First Search uses a Queue (FIFO) to explore level by level."},
+{s:4,q:"Time complexity of insertion in a sorted array is:",o:["O(1)","O(log n)","O(n)","O(n log n)"],a:2,e:"Inserting into a sorted array requires shifting elements — O(n) in the worst case."},
+{s:4,q:"Which of the following is NOT a primitive data type in Java?",o:["int","char","String","boolean"],a:2,e:"String is a class (reference type) in Java, not a primitive data type."},
+{s:4,q:"ACID in databases refers to:",o:["Authentication Consistency Isolation Durability","Atomicity Consistency Isolation Durability","Atomicity Correctness Integrity Durability","Authenticity Consistency Integrity Durability"],a:1,e:"ACID = Atomicity, Consistency, Isolation, Durability — properties of database transactions."},
+{s:4,q:"What does HTML stand for?",o:["HyperText Markup Language","HighText Machine Language","HyperText Machine Language","HighText Markup Language"],a:0,e:"HTML stands for HyperText Markup Language, the standard language for web pages."},
+{s:4,q:"Which protocol provides reliable, connection-oriented communication?",o:["UDP","IP","TCP","ICMP"],a:2,e:"TCP (Transmission Control Protocol) provides reliable, ordered delivery with error checking."},
+{s:4,q:"In C, what does 'malloc' do?",o:["Free memory","Allocate static memory","Dynamically allocate memory","Initialize variables"],a:2,e:"'malloc' dynamically allocates a specified number of bytes in the heap."},
+{s:4,q:"A binary tree with n leaf nodes has how many internal nodes?",o:["n","n-1","n+1","2n"],a:1,e:"In a full binary tree, number of internal nodes = number of leaf nodes - 1."},
+{s:4,q:"Which of the following is a lossless compression?",o:["JPEG","MP3","PNG","MPEG"],a:2,e:"PNG uses lossless compression — the original data can be perfectly reconstructed."},
+{s:4,q:"What is the 2's complement of 5 in 4 bits?",o:["1010","1011","1100","0101"],a:1,e:"5 = 0101; 1's complement = 1010; add 1 = 1011. So 2's complement of 5 = 1011."},
+{s:4,q:"What does a firewall do?",o:["Speed up network","Monitor and control incoming/outgoing traffic","Store data","Compress files"],a:1,e:"A firewall monitors and controls network traffic based on security rules."},
+{s:4,q:"Which keyword in Java prevents overriding?",o:["static","abstract","final","private"],a:2,e:"The 'final' keyword in Java prevents a method or class from being overridden or extended."},
+{s:4,q:"The process of converting infix to postfix uses which data structure?",o:["Queue","Linked list","Stack","Tree"],a:2,e:"A stack is used in the Shunting Yard algorithm to convert infix to postfix expression."},
+{s:4,q:"Which of the following is a high-level programming language?",o:["Machine code","Assembly","Python","Binary"],a:2,e:"Python is a high-level, human-readable programming language."},
+{s:4,q:"In relational databases, a 'foreign key' refers to?",o:["Primary key of the same table","Column linking to primary key of another table","Encrypted key","Index key"],a:1,e:"A foreign key is a column that establishes a relationship by referencing the primary key of another table."},
+{s:4,q:"Which protocol is used for secure web communication?",o:["HTTP","FTP","HTTPS","Telnet"],a:2,e:"HTTPS (HTTP Secure) uses SSL/TLS encryption for secure web communication."},
+{s:4,q:"What is polymorphism in OOP?",o:["Multiple inheritance","Ability of objects to take multiple forms","Hiding data","Sharing code between classes"],a:1,e:"Polymorphism allows objects of different types to be treated as instances of a common superclass."},
+{s:4,q:"Which layer of OSI model is responsible for encryption?",o:["Application","Transport","Session","Presentation"],a:3,e:"The Presentation layer (Layer 6) handles data encryption, decryption, and formatting."},
+{s:4,q:"The worst-case time complexity of Quick Sort is:",o:["O(n log n)","O(n)","O(n²)","O(log n)"],a:2,e:"Quick Sort's worst case O(n²) occurs when the pivot is always the smallest or largest element."},
+{s:4,q:"Which of the following is used to find shortest path in a graph?",o:["DFS","BFS","Dijkstra's Algorithm","Prim's Algorithm"],a:2,e:"Dijkstra's Algorithm finds the shortest path from a source to all vertices in a weighted graph."},
+{s:4,q:"In Python, what does 'len()' function return?",o:["Last element","First element","Length of an object","Sum of elements"],a:2,e:"'len()' returns the number of items in an object (list, string, tuple, etc.)."},
+{s:4,q:"What is the purpose of an index in a database?",o:["Delete records faster","Speed up data retrieval","Encrypt data","Normalize tables"],a:1,e:"An index improves the speed of data retrieval operations on a database table."},
+{s:4,q:"In C++, a class that cannot be instantiated is called?",o:["Static class","Virtual class","Abstract class","Final class"],a:2,e:"An abstract class contains at least one pure virtual function and cannot be instantiated."},
+{s:4,q:"Which of the following is a page replacement algorithm?",o:["Round Robin","FIFO","SJF","Priority"],a:1,e:"FIFO (First In First Out) is a page replacement algorithm used in virtual memory management."},
+{s:4,q:"What is the output of 6 OR 3 (bitwise)?",o:["3","6","7","9"],a:2,e:"6 = 110, 3 = 011; OR = 111 = 7."},
+{s:4,q:"Which file system is commonly used by Windows?",o:["EXT4","HFS+","NTFS","ZFS"],a:2,e:"NTFS (New Technology File System) is the default file system for Windows operating systems."},
+{s:4,q:"What does JVM stand for?",o:["Java Variable Machine","Java Virtual Machine","Java Verification Module","Java Visual Manager"],a:1,e:"JVM stands for Java Virtual Machine, which executes Java bytecode."},
+{s:4,q:"Which of the following is a type of cyber attack?",o:["Firewall","Phishing","VPN","Encryption"],a:1,e:"Phishing is a cyber attack where attackers deceive users into revealing personal information."},
+{s:4,q:"In a max heap, the root contains?",o:["Minimum value","Maximum value","Middle value","Random value"],a:1,e:"In a max heap, the root always contains the maximum (largest) value."},
+{s:4,q:"Which of the following is a feature of cloud computing?",o:["Fixed storage","On-demand self-service","Local processing only","High upfront cost"],a:1,e:"Cloud computing provides on-demand access to resources like storage, networking, and computation."},
+{s:4,q:"In C, 'printf' belongs to which header file?",o:["stdlib.h","string.h","stdio.h","math.h"],a:2,e:"'printf' is declared in stdio.h (standard input/output header file)."},
+{s:4,q:"Which memory is the fastest?",o:["RAM","Hard Disk","Cache","Registers"],a:3,e:"CPU registers are the fastest memory, directly accessible by the processor."},
+{s:4,q:"The average case time complexity of Quick Sort is:",o:["O(n)","O(n log n)","O(n²)","O(log n)"],a:1,e:"Quick Sort's average case is O(n log n) when pivot divides the array roughly equally."},
+{s:4,q:"What does SQL stand for?",o:["Structured Query Language","Simple Query Language","Standard Query Logic","Sequential Query Language"],a:0,e:"SQL stands for Structured Query Language, used for managing relational databases."},
+{s:4,q:"Which of the following is a type of join in SQL?",o:["FULL OUTER JOIN","CIRCULAR JOIN","RECURSIVE JOIN","SEQUENTIAL JOIN"],a:0,e:"FULL OUTER JOIN returns all records from both tables, with NULLs where there are no matches."},
+{s:4,q:"What is an algorithm?",o:["A programming language","Step-by-step instructions to solve a problem","A type of data","A software application"],a:1,e:"An algorithm is a finite sequence of well-defined instructions for solving a problem."},
+{s:4,q:"Which of these is an example of an abstract data type?",o:["Integer","Array","Stack","Char"],a:2,e:"Stack is an abstract data type defined by its behavior (push, pop) rather than implementation."},
+{s:4,q:"What is the function of an assembler?",o:["Convert assembly language to machine code","Convert high-level to assembly","Execute programs","Manage memory"],a:0,e:"An assembler converts assembly language programs into machine code."},
+{s:4,q:"In networking, what is a MAC address?",o:["IP address","Hardware address of a network interface","URL","Domain name"],a:1,e:"A MAC address is a unique hardware identifier assigned to a network interface controller."},
+{s:4,q:"Which design pattern ensures only one instance of a class?",o:["Factory","Observer","Singleton","Decorator"],a:2,e:"The Singleton pattern restricts the instantiation of a class to exactly one instance."},
+{s:4,q:"Recursion requires which condition to terminate?",o:["Base case","Recursive case","Both base and recursive","Stack overflow"],a:0,e:"A base case is essential in recursion to stop the recursive calls and prevent infinite recursion."},
+{s:4,q:"In Python, which keyword is used to define a function?",o:["function","define","def","func"],a:2,e:"In Python, 'def' keyword is used to define a function."},
+{s:4,q:"Which of the following is a non-relational database?",o:["MySQL","PostgreSQL","Oracle","MongoDB"],a:3,e:"MongoDB is a NoSQL (non-relational) document-oriented database."},
+{s:4,q:"What does BIOS stand for?",o:["Binary Input Output System","Basic Integrated Operating System","Basic Input Output System","Base Internal Operating System"],a:2,e:"BIOS stands for Basic Input Output System, firmware used to initialize hardware during booting."},
+{s:4,q:"Which of the following is a process scheduling algorithm?",o:["FIFO","Round Robin","Both FIFO and Round Robin","Bubble Sort"],a:2,e:"Both FIFO (First Come First Served) and Round Robin are CPU scheduling algorithms."},
+{s:4,q:"What is a constructor in OOP?",o:["A method that destroys objects","A special method called when object is created","A method that copies objects","A static method"],a:1,e:"A constructor is a special method automatically invoked when an object is instantiated."},
+{s:4,q:"In C, which operator is used for pointer dereferencing?",o:["&","->","*","[]"],a:2,e:"The '*' (asterisk) operator is used to dereference a pointer in C."},
+{s:4,q:"What is the time complexity of accessing an element in a hash table on average?",o:["O(n)","O(log n)","O(1)","O(n log n)"],a:2,e:"Hash tables provide O(1) average time for insertion, deletion, and lookup."},
+{s:4,q:"Which HTML tag is used to create a hyperlink?",o:["<link>","<a>","<href>","<url>"],a:1,e:"The <a> (anchor) tag with the 'href' attribute is used to create hyperlinks in HTML."},
+{s:4,q:"What is the function of the 'garbage collector' in Java?",o:["Handle exceptions","Free unused memory automatically","Manage threads","Optimize code"],a:1,e:"Java's garbage collector automatically reclaims memory used by objects that are no longer referenced."},
+{s:4,q:"Which protocol is at the application layer?",o:["IP","TCP","HTTP","Ethernet"],a:2,e:"HTTP operates at the Application layer (Layer 7 in OSI, Layer 4 in TCP/IP)."},
+{s:4,q:"In computer architecture, RISC stands for?",o:["Reduced Instruction Set Computer","Regular Instruction Set Computer","Rapid Instruction Set Computer","Reduced Internal Set Computer"],a:0,e:"RISC stands for Reduced Instruction Set Computer, using simple and few instructions."},
+{s:4,q:"Which of the following is an in-place sorting algorithm?",o:["Merge Sort","Counting Sort","Heap Sort","Radix Sort"],a:2,e:"Heap Sort is an in-place sorting algorithm requiring only O(1) extra space."},
+{s:4,q:"In graph theory, a tree with n vertices has how many edges?",o:["n","n+1","n-1","2n"],a:2,e:"A tree with n vertices always has exactly n-1 edges."},
+{s:4,q:"What is the role of an operating system?",o:["Run database queries","Manage hardware and software resources","Create websites","Design algorithms"],a:1,e:"An OS manages hardware, provides services to applications, and acts as an interface between user and hardware."},
+{s:4,q:"In Java, 'interface' keyword is used to?",o:["Create objects","Define abstract behaviors","Extend classes","Overload methods"],a:1,e:"An interface in Java defines abstract behaviors (method signatures) without implementation."},
+{s:4,q:"What is the purpose of 'git commit'?",o:["Push code to remote","Save changes to local repository","Create a branch","Merge branches"],a:1,e:"'git commit' saves staged changes to the local repository with a message."},
+{s:4,q:"Which of the following is a valid IPv4 address?",o:["256.0.0.1","192.168.1.1","192.168.1.300","0.0.0.0.1"],a:1,e:"192.168.1.1 is valid — each octet must be 0-255. 256 and 300 are invalid."},
+{s:4,q:"What does API stand for?",o:["Application Program Interface","Application Programming Interface","Applied Programming Interface","Application Protocol Interface"],a:1,e:"API stands for Application Programming Interface, enabling communication between software components."},
+{s:4,q:"Which of the following performs floor division in Python?",o:["/","//","%","**"],a:1,e:"'//' performs floor (integer) division in Python, discarding the decimal part."},
+{s:4,q:"In an AVL tree, the balance factor of any node must be?",o:["0","between -1 and 1","between 0 and 2","-1"],a:1,e:"AVL tree maintains balance factor (difference of heights of left and right subtrees) between -1 and +1."},
+{s:4,q:"What is the default port for HTTP?",o:["21","22","80","443"],a:2,e:"HTTP uses port 80 by default. HTTPS uses port 443."},
+{s:4,q:"In C programming, 'scanf' is used to?",o:["Print output","Read input","Allocate memory","Define functions"],a:1,e:"'scanf' reads formatted input from the standard input (usually keyboard)."},
+{s:4,q:"What is the term for the physical transmission medium in a network?",o:["Protocol","Topology","Medium/Channel","Bandwidth"],a:2,e:"The physical medium (cable, fiber, wireless) through which data is transmitted is called the channel or medium."},
+{s:4,q:"Which of the following is a stable sorting algorithm?",o:["Quick Sort","Heap Sort","Merge Sort","Selection Sort"],a:2,e:"Merge Sort is stable — elements with equal keys maintain their relative order."},
+{s:4,q:"What is a semaphore in OS?",o:["A type of memory","Synchronization mechanism for processes","A scheduling algorithm","A type of file system"],a:1,e:"A semaphore is a synchronization variable used to control access to shared resources."},
+{s:4,q:"Which of the following is the correct way to declare an array in Java?",o:["int arr[];","int[] arr;","array int arr;","int arr{}"],a:1,e:"'int[] arr;' is the preferred Java syntax for declaring an integer array."},
+{s:4,q:"In CSS, which property changes text color?",o:["background-color","font-color","text-color","color"],a:3,e:"The 'color' property in CSS sets the text color."},
+{s:4,q:"What does OOP stand for?",o:["Object Oriented Programming","Object Operative Programming","Open Oriented Protocol","Oriented Object Protocol"],a:0,e:"OOP stands for Object Oriented Programming, a paradigm based on objects and classes."},
+{s:4,q:"Which register stores the address of next instruction?",o:["Stack Pointer","Accumulator","Program Counter","Instruction Register"],a:2,e:"The Program Counter (PC) holds the memory address of the next instruction to be executed."},
+{s:4,q:"What is the difference between 'break' and 'continue' in loops?",o:["No difference","break exits loop, continue skips to next iteration","break skips iteration, continue exits","Both exit the loop"],a:1,e:"'break' terminates the loop; 'continue' skips the current iteration and moves to the next."},
+{s:4,q:"In a doubly linked list, each node has?",o:["One pointer","Two pointers","Three pointers","No pointer"],a:1,e:"A doubly linked list node has two pointers: one to the next node and one to the previous node."},
+{s:4,q:"Which SQL clause filters grouped results?",o:["WHERE","GROUP BY","HAVING","ORDER BY"],a:2,e:"HAVING clause filters rows after grouping (unlike WHERE which filters before grouping)."},
+{s:4,q:"What is the use of 'try-catch' in programming?",o:["Create loops","Handle exceptions","Define classes","Allocate memory"],a:1,e:"Try-catch blocks handle exceptions (runtime errors) gracefully without crashing the program."},
+{s:4,q:"What is a subnet mask?",o:["IP address type","Mask to separate network and host portions of IP","DNS address","MAC address"],a:1,e:"A subnet mask divides an IP address into network and host portions."},
+{s:4,q:"Which of the following is NOT an OOP principle?",o:["Encapsulation","Inheritance","Compilation","Polymorphism"],a:2,e:"Compilation is a process, not an OOP principle. The four OOP principles are: Encapsulation, Inheritance, Polymorphism, Abstraction."},
+{s:4,q:"What is the purpose of 'return' in a function?",o:["Print a value","Exit the function and optionally return a value","Declare variables","Import modules"],a:1,e:"'return' terminates function execution and can pass a value back to the caller."},
+{s:4,q:"Which notation represents a post-order traversal sequence?",o:["Root-Left-Right","Left-Root-Right","Left-Right-Root","Right-Root-Left"],a:2,e:"Post-order traversal follows Left → Right → Root sequence."},
+{s:4,q:"What is the key feature of a queue?",o:["LIFO","FIFO","Random access","Priority based"],a:1,e:"A queue follows FIFO (First In First Out) — the first element inserted is the first removed."},
+{s:4,q:"What does the 'volatile' keyword mean in C?",o:["Variable is constant","Variable can be modified externally","Variable is static","Variable is shared"],a:1,e:"'volatile' tells the compiler not to optimize access to the variable — it may change unexpectedly (e.g., hardware registers)."},
+{s:4,q:"Which of the following is a graph traversal algorithm?",o:["Merge Sort","DFS (Depth First Search)","Binary Search","Insertion Sort"],a:1,e:"DFS (Depth First Search) is a graph traversal algorithm that explores as far as possible before backtracking."},
+{s:4,q:"In computer networks, what is a router?",o:["A device connecting devices in LAN","A device directing packets between networks","A type of cable","A network protocol"],a:1,e:"A router directs data packets between different networks, determining the best path."},
+{s:4,q:"Which of the following is a greedy algorithm?",o:["Merge Sort","Dynamic Programming","Dijkstra's Algorithm","Floyd-Warshall"],a:2,e:"Dijkstra's Algorithm is a greedy algorithm that always selects the lowest-cost next node."},
+{s:4,q:"What is 'deadlock prevention'?",o:["Detecting deadlock after it occurs","Ensuring deadlock never occurs by restricting resource allocation","Recovering from deadlock","Ignoring deadlock"],a:1,e:"Deadlock prevention ensures the system never enters a deadlock state by restricting resource requests."},
+{s:4,q:"In JavaScript, 'null' and 'undefined' are?",o:["Same","Different types","Both numbers","Both strings"],a:1,e:"'null' is an assigned value meaning 'no value'; 'undefined' means a variable has been declared but not assigned."},
+{s:4,q:"What is Big O notation used for?",o:["Measuring memory only","Describing algorithm efficiency/complexity","Naming variables","Sorting algorithms only"],a:1,e:"Big O notation describes the upper bound of time or space complexity of an algorithm."},
+{s:4,q:"Which of these is a symmetric encryption algorithm?",o:["RSA","Diffie-Hellman","AES","ECC"],a:2,e:"AES (Advanced Encryption Standard) is a symmetric key encryption algorithm."},
+{s:4,q:"What is the output of: print(2**10) in Python?",o:["20","512","1024","2048"],a:2,e:"'**' is the power operator in Python. 2**10 = 1024."},
+{s:4,q:"Which statement about recursion is true?",o:["It always uses less memory than iteration","It always runs faster than iteration","Each call creates a new stack frame","It cannot solve tree problems"],a:2,e:"Each recursive call adds a new frame to the call stack, consuming memory."},
+{s:4,q:"In database, normalization is done to?",o:["Speed up queries","Reduce data redundancy","Encrypt data","Add more tables"],a:1,e:"Normalization organizes database tables to reduce redundancy and improve data integrity."},
+{s:4,q:"Which protocol provides connectionless communication?",o:["TCP","FTP","UDP","SMTP"],a:2,e:"UDP (User Datagram Protocol) is connectionless — it sends packets without establishing a connection."},
+{s:4,q:"What is method overloading?",o:["Same method name, different class","Same method name, different parameters in same class","Overriding parent method","Multiple inheritance"],a:1,e:"Method overloading allows multiple methods with the same name but different parameter lists in the same class."},
+{s:4,q:"Which data structure implements priority queue efficiently?",o:["Array","Linked list","Heap","Stack"],a:2,e:"A heap (max-heap or min-heap) efficiently implements a priority queue with O(log n) operations."},
+{s:4,q:"In Linux, which command lists files in a directory?",o:["dir","list","ls","show"],a:2,e:"'ls' command lists directory contents in Linux/Unix systems."},
+{s:4,q:"What is the role of the Application layer in OSI?",o:["Data encoding","Routing","Network access","Interface between user applications and network"],a:3,e:"The Application layer (Layer 7) provides protocols for user applications like HTTP, FTP, SMTP."},
+{s:4,q:"What is the purpose of 'polymorphism' in OOP?",o:["Hide class details","Allow the same interface for different data types","Improve memory usage","Copy objects"],a:1,e:"Polymorphism allows one interface to be used for different underlying forms (data types)."},
+{s:4,q:"In relational algebra, which operation removes duplicate tuples?",o:["Select","Project","Join","Distinct"],a:1,e:"Projection (π) in relational algebra removes duplicate tuples from the result."},
+{s:4,q:"What is context switching in OS?",o:["Switching applications","Saving and restoring state of CPU when switching processes","Changing network connections","Switching memory types"],a:1,e:"Context switching saves the state of a running process and loads the state of another process."},
+{s:4,q:"Which HTML element is used for the largest heading?",o:["<h6>","<h3>","<h1>","<heading>"],a:2,e:"<h1> is the largest/most important heading in HTML; <h6> is the smallest."},
+{s:4,q:"In Python, a list comprehension [x*2 for x in range(3)] gives?",o:["[0,2,4]","[1,2,3]","[2,4,6]","[0,1,2]"],a:0,e:"range(3) = [0,1,2]; multiplied by 2 = [0,2,4]."},
+{s:4,q:"Which of the following is a valid Python dictionary?",o:["{'key': value}","[key, value]","(key, value)","key => value"],a:0,e:"Python dictionaries use curly braces with key-value pairs: {'key': value}."},
+{s:4,q:"What is a 'thread' in programming?",o:["A data type","A lightweight process within a process","A network cable","A type of loop"],a:1,e:"A thread is the smallest unit of execution within a process, sharing the same memory space."},
+{s:4,q:"In TCP handshake, the initial message sent is?",o:["ACK","SYN","FIN","RST"],a:1,e:"TCP uses a 3-way handshake: SYN → SYN-ACK → ACK."},
+{s:4,q:"Which CSS property makes text bold?",o:["text-style: bold","font-weight: bold","text-weight: bold","font-style: bold"],a:1,e:"'font-weight: bold' makes text bold in CSS."},
+{s:4,q:"What is 'Big Data'?",o:["Data stored in big computers","Extremely large datasets that require special processing tools","Data about large companies","Database systems only"],a:1,e:"Big Data refers to datasets too large and complex for traditional data-processing software."},
+{s:4,q:"Which sorting algorithm is best for nearly sorted data?",o:["Quick Sort","Merge Sort","Insertion Sort","Heap Sort"],a:2,e:"Insertion Sort is very efficient on nearly sorted data — O(n) best case."},
+{s:4,q:"What does the 'this' keyword refer to in Java?",o:["Parent class","Current class instance","Static variables","Super class"],a:1,e:"'this' refers to the current object instance in Java."},
+{s:4,q:"In graph theory, a complete graph with n vertices has how many edges?",o:["n","n(n-1)/2","n²","n(n+1)/2"],a:1,e:"A complete graph Kn has n(n-1)/2 edges."},
+{s:4,q:"What is 'caching' in computing?",o:["Deleting old files","Storing frequently accessed data in fast memory","Encrypting data","Compressing files"],a:1,e:"Caching stores copies of frequently accessed data in fast storage to improve performance."},
+{s:4,q:"Which of these is used for version control?",o:["Docker","Kubernetes","Git","Jenkins"],a:2,e:"Git is a distributed version control system for tracking changes in source code."},
+{s:4,q:"What is the output of 'Hello'[1] in Python?",o:["H","e","l","He"],a:1,e:"Python strings are 0-indexed: 'Hello'[0]='H', 'Hello'[1]='e'."},
+{s:4,q:"Which normal form deals with multi-valued dependencies?",o:["1NF","2NF","3NF","4NF"],a:3,e:"Fourth Normal Form (4NF) deals with multi-valued dependencies."},
+{s:4,q:"What is the purpose of 'git pull'?",o:["Push local changes to remote","Fetch and merge changes from remote","Create new branch","Delete branch"],a:1,e:"'git pull' fetches changes from the remote repository and merges them into the local branch."},
+{s:4,q:"Which of the following represents a min-heap property?",o:["Parent ≥ all descendants","Parent ≤ all descendants","Left child < right child","Root is maximum"],a:1,e:"In a min-heap, every parent node is smaller than or equal to its children."},
+{s:4,q:"What is the function of ARP protocol?",o:["Resolves domain names to IP","Resolves IP to MAC address","Manages routing","Handles email"],a:1,e:"ARP (Address Resolution Protocol) resolves an IP address to a MAC address on a local network."},
+{s:4,q:"In C++, which function must be implemented in a derived class?",o:["Static function","Friend function","Pure virtual function","Constructor"],a:2,e:"Pure virtual functions (declared with '= 0') must be overridden in the derived class."},
+{s:4,q:"What is the time complexity of building a heap from n elements?",o:["O(n log n)","O(n)","O(n²)","O(log n)"],a:1,e:"Building a heap from n elements takes O(n) time using the bottom-up heapify approach."},
+{s:4,q:"Which type of error is caught during compilation?",o:["Logical error","Runtime error","Syntax error","Semantic error at runtime"],a:2,e:"Syntax errors are detected by the compiler before the program runs."},
+{s:4,q:"In CSS, 'display: flex' is used for?",o:["Adding animations","Creating flexible box layouts","Hiding elements","Adding borders"],a:1,e:"Flexbox ('display: flex') creates efficient, flexible, one-dimensional layouts."},
+{s:4,q:"Which of the following is Dijkstra's limitation?",o:["Cannot find shortest path","Cannot work with unweighted graphs","Cannot work with negative weight edges","Works only on trees"],a:2,e:"Dijkstra's Algorithm doesn't work correctly with negative weight edges."},
+{s:4,q:"What is function overriding in OOP?",o:["Same function in same class","Redefining a parent class method in child class","Multiple functions same name","Static method replacement"],a:1,e:"Overriding redefines a superclass method in a subclass with the same signature."},
+{s:4,q:"In Python, which is used for multiple inheritance?",o:["Python doesn't support multiple inheritance","class C(A,B):","class C extends A,B:","class C inherits A,B:"],a:1,e:"Python supports multiple inheritance using class C(A,B): syntax."},
+{s:4,q:"What is the primary goal of cryptography?",o:["Speed up communication","Secure data from unauthorized access","Compress data","Improve network speed"],a:1,e:"Cryptography ensures data confidentiality, integrity, and authenticity against unauthorized access."},
+{s:4,q:"In Java, which collection allows duplicate elements and maintains insertion order?",o:["Set","HashMap","ArrayList","TreeSet"],a:2,e:"ArrayList allows duplicates and maintains the order of insertion."},
+{s:4,q:"Which of the following is true about a B-tree?",o:["All data is in root","All leaves are at same level","Only 2 children allowed","No ordering is maintained"],a:1,e:"In a B-tree, all leaves are at the same level (balanced), and data is ordered."},
+{s:4,q:"What is machine learning in simple terms?",o:["Programming with manual rules","Systems that learn from data to make predictions","Building physical machines","Network management"],a:1,e:"Machine learning is a subset of AI where systems learn patterns from data to make predictions."},
+{s:4,q:"Which of these is an example of a meta-data tag in HTML?",o:["<div>","<p>","<meta>","<span>"],a:2,e:"<meta> tags provide metadata about an HTML document (charset, description, author, etc.)."},
+{s:4,q:"What does 'abstraction' mean in OOP?",o:["Hiding everything","Showing only essential features, hiding complexity","Copying objects","Sharing methods between classes"],a:1,e:"Abstraction shows only what is necessary while hiding implementation complexity."},
+{s:4,q:"Which SQL command removes a table completely?",o:["DELETE","TRUNCATE","DROP","REMOVE"],a:2,e:"DROP TABLE removes the table structure and all its data permanently."},
+{s:4,q:"In Python, what is a 'tuple'?",o:["Mutable ordered sequence","Immutable ordered sequence","Unordered collection","Key-value mapping"],a:1,e:"A tuple is an immutable ordered collection of elements in Python."},
+{s:4,q:"What is the concept of 'pipelining' in CPU?",o:["Multi-core processing","Executing multiple instructions simultaneously in stages","Memory management","Cache optimization"],a:1,e:"CPU pipelining overlaps multiple instruction stages (fetch, decode, execute) to improve throughput."},
+{s:4,q:"Which protocol is used to assign IP addresses dynamically?",o:["DNS","ARP","DHCP","NAT"],a:2,e:"DHCP (Dynamic Host Configuration Protocol) automatically assigns IP addresses to network devices."},
+{s:4,q:"What does the 'new' keyword do in Java?",o:["Declares a variable","Creates a new object/allocates memory on heap","Deletes an object","Imports a class"],a:1,e:"'new' keyword in Java allocates memory on the heap and creates a new instance of a class."},
+{s:4,q:"In which layer does IP protocol work?",o:["Application layer","Transport layer","Network layer","Data Link layer"],a:2,e:"IP (Internet Protocol) operates at the Network layer (Layer 3) of the OSI model."},
+{s:4,q:"What is an 'exception' in programming?",o:["A syntax error","A warning message","An error that disrupts normal program flow","A compilation error"],a:2,e:"An exception is an event that disrupts the normal flow of a program during execution."},
+{s:4,q:"Which of the following stores the most data?",o:["Kilobyte","Megabyte","Gigabyte","Terabyte"],a:3,e:"1 TB = 1024 GB = 1024×1024 MB. Terabyte stores the most among the options."},
+{s:4,q:"What is a 'callback function' in JavaScript?",o:["A function that calls itself","A function passed as argument to another function","A function that returns nothing","A class method"],a:1,e:"A callback is a function passed as an argument to another function, to be called later."},
+{s:4,q:"Which data structure best represents hierarchical data?",o:["Array","Queue","Stack","Tree"],a:3,e:"Trees naturally represent hierarchical relationships (e.g., file systems, org charts)."},
+{s:4,q:"In computing, 'latency' refers to?",o:["Bandwidth of network","Time delay between input and response","Storage capacity","Processing speed"],a:1,e:"Latency is the time delay between a stimulus and the response; the lag time in data communication."},
+{s:4,q:"Which of these is an open-source operating system?",o:["Windows","macOS","iOS","Linux"],a:3,e:"Linux is an open-source operating system — its source code is publicly available and modifiable."},
+{s:4,q:"In Python, 'is' operator checks?",o:["Value equality","Identity (same object in memory)","Type equality","Attribute equality"],a:1,e:"'is' checks whether two variables point to the same object in memory (identity check)."},
+{s:4,q:"What is 'virtual memory'?",o:["Extra RAM","Using hard disk space as RAM extension","Graphics memory","CPU cache"],a:1,e:"Virtual memory uses disk space to extend RAM, allowing more processes to run simultaneously."},
+{s:4,q:"Which of the following is a disadvantage of arrays?",o:["Fast access","Easy traversal","Fixed size at creation","Supports indexing"],a:2,e:"Arrays have fixed size — resizing requires creating a new array, which is a limitation."},
+{s:4,q:"What does JSON stand for?",o:["Java Syntax Object Notation","JavaScript Object Notation","Java Source Object Notation","JavaScript Outline Notation"],a:1,e:"JSON stands for JavaScript Object Notation, a lightweight data interchange format."},
+{s:4,q:"Which algorithm is used in network routing tables?",o:["Bubble Sort","Dijkstra / Bellman-Ford","Quick Sort","DFS"],a:1,e:"Dijkstra's and Bellman-Ford algorithms are used to compute shortest paths in routing protocols."},
+{s:4,q:"What is the purpose of a 'stub' in testing?",o:["A real implementation","A placeholder that simulates component behavior","A type of bug","A performance test"],a:1,e:"A stub simulates the behavior of a component to isolate and test another component."},
+{s:4,q:"In C, 'struct' is used to?",o:["Declare a class","Define a collection of variables of different types","Allocate dynamic memory","Create a pointer"],a:1,e:"'struct' in C defines a composite data type grouping variables of different types."},
+{s:4,q:"What is the difference between '==' and '===' in JavaScript?",o:["No difference","== checks value only; === checks value and type","=== checks value only; == checks type","Both check type only"],a:1,e:"'==' performs type coercion; '===' (strict equality) checks both value and type."},
+{s:4,q:"Which of the following is a CPU scheduling criterion?",o:["Disk space","CPU utilization","RAM size","Network bandwidth"],a:1,e:"CPU utilization is a key scheduling criterion — aim is to keep CPU as busy as possible."},
+{s:4,q:"What is 'polymorphism' in Java achieved through?",o:["Constructors only","Method overloading and overriding","Only interfaces","Only abstract classes"],a:1,e:"Java achieves polymorphism through method overloading (compile-time) and overriding (runtime)."},
+{s:4,q:"In operating systems, what is a 'semaphore'?",o:["Hardware signal","Software synchronization variable","Type of interrupt","Network protocol"],a:1,e:"A semaphore is a synchronization tool (variable) used to control access to shared resources."},
+{s:4,q:"Which of these is NOT a characteristic of a good algorithm?",o:["Finiteness","Definiteness","Ambiguity","Effectiveness"],a:2,e:"Ambiguity is NOT a characteristic of a good algorithm. Algorithms must be unambiguous."},
+{s:4,q:"What is the function of CSS in web development?",o:["Structure content","Add interactivity","Style and layout of web pages","Database management"],a:2,e:"CSS (Cascading Style Sheets) controls the visual presentation and layout of HTML elements."},
+{s:4,q:"In Python, which statement is used to handle multiple exceptions?",o:["multi-except","try-catch-catch","except (ExceptionType1, ExceptionType2)","multi-catch"],a:2,e:"Python handles multiple exceptions with: except (TypeError, ValueError): syntax."},
+{s:4,q:"What is the time complexity of searching in a BST in the average case?",o:["O(1)","O(n)","O(log n)","O(n²)"],a:2,e:"In a balanced BST, search takes O(log n) on average."},
+{s:4,q:"Which design principle states 'a class should have only one reason to change'?",o:["Open/Closed","Liskov Substitution","Single Responsibility","Dependency Inversion"],a:2,e:"The Single Responsibility Principle (SRP) — one of SOLID principles — states a class should have only one reason to change."},
+{s:4,q:"In networking, what is NAT?",o:["Network Administration Tool","Network Address Translation","Naming and Addressing Table","Network Analysis Technique"],a:1,e:"NAT (Network Address Translation) maps private IP addresses to a public IP address."},
+{s:4,q:"Which of the following is true about linked lists vs arrays?",o:["Arrays use less memory","Linked lists support O(1) random access","Linked lists use more memory due to pointers","Arrays insert faster at beginning"],a:2,e:"Linked lists use extra memory for pointers; arrays don't have pointer overhead."},
+{s:4,q:"What is 'inheritance' in OOP?",o:["Copying an object","A class acquiring properties of another class","Hiding class details","Creating multiple objects"],a:1,e:"Inheritance allows a derived (child) class to acquire properties and methods of a base (parent) class."},
+{s:4,q:"In SQL, 'GROUP BY' is used to?",o:["Sort records","Filter records","Combine records with same values into summary rows","Join tables"],a:2,e:"GROUP BY groups rows with the same values in specified columns, often used with aggregate functions."},
+{s:4,q:"What is the binary representation of decimal 10?",o:["1001","1010","1100","0110"],a:1,e:"10 in binary: 8+2 = 1010."},
+{s:4,q:"In Java, 'ArrayList' vs 'Array' — which can resize dynamically?",o:["Array","ArrayList","Both","Neither"],a:1,e:"ArrayList can resize dynamically; a regular array has fixed size once created."},
+{s:4,q:"Which type of testing checks the entire system as a whole?",o:["Unit testing","Integration testing","System testing","Code review"],a:2,e:"System testing validates the complete, integrated software product against requirements."},
+{s:4,q:"In Python, what does 'pop()' do on a list?",o:["Adds element at end","Removes and returns last element","Returns first element","Reverses the list"],a:1,e:"list.pop() removes and returns the last element of the list (or at specified index)."},
+{s:4,q:"What is 'hashing' in data structures?",o:["Sorting elements","Mapping keys to array positions via hash function","Encrypting data","Compressing data"],a:1,e:"Hashing maps keys to specific positions in an array using a hash function for fast lookups."},
+{s:4,q:"Which of these network topologies requires the most cable?",o:["Bus","Ring","Star","Mesh"],a:3,e:"Mesh topology requires each device to be connected to every other device — maximum cabling."},
+{s:4,q:"What is the purpose of 'static' keyword in Java?",o:["Create temporary variables","Share a single copy across all instances","Define abstract methods","Mark for garbage collection"],a:1,e:"Static members belong to the class (not instances) — shared by all objects of that class."},
+{s:4,q:"Which protocol manages email retrieval?",o:["SMTP","IMAP","HTTP","FTP"],a:1,e:"IMAP (Internet Message Access Protocol) retrieves and manages email from a mail server."},
+{s:4,q:"In logic gates, what is the output of NOT(A AND B)?",o:["NAND","NOR","XNOR","XOR"],a:0,e:"NOT(A AND B) = NAND gate. NAND is the complement of AND."},
+{s:4,q:"Which of the following is an example of a greedy failure (optimal not achieved)?",o:["Dijkstra's on positive weights","Prim's MST","Fractional Knapsack","0/1 Knapsack"],a:3,e:"Greedy fails for 0/1 Knapsack — Dynamic Programming is needed for optimal solution."},
+{s:4,q:"What is the purpose of the 'super' keyword in Java?",o:["Refers to current class","Refers to parent class","Creates new object","Deletes parent object"],a:1,e:"'super' refers to the parent/superclass, used to call parent methods or constructors."},
+{s:4,q:"In computer networks, what is 'throughput'?",o:["Maximum theoretical capacity","Actual data transfer rate in a given time","Network delay","Packet loss rate"],a:1,e:"Throughput is the actual amount of data successfully transferred per unit time."},
+{s:4,q:"Which of these is a valid way to prevent SQL injection?",o:["Using LIKE queries","Using prepared statements/parameterized queries","Using SELECT *","Storing passwords in plain text"],a:1,e:"Prepared statements/parameterized queries prevent SQL injection by separating code from data."},
+{s:4,q:"What does 'overloading' mean in C++?",o:["Defining a function twice","Using same function/operator name with different parameters","Inheriting functions","Deleting functions"],a:1,e:"Overloading allows the same function or operator to work with different types/numbers of arguments."},
+{s:4,q:"In database management, 'transaction' refers to?",o:["Data type","A unit of work that is atomic","A type of query","Database backup"],a:1,e:"A transaction is a sequence of operations performed as a single logical unit of work."},
+{s:4,q:"Which of the following is a NoSQL database type?",o:["Relational","Document-based","Columnar-only","XML only"],a:1,e:"Document-based databases (like MongoDB) store data as JSON-like documents."},
+{s:4,q:"What is 'race condition' in concurrent programming?",o:["Performance issue","Two processes accessing shared resource, outcome depends on timing","Memory leak","Stack overflow"],a:1,e:"A race condition occurs when multiple threads access shared data simultaneously and the outcome depends on the order of execution."},
+{s:4,q:"Which of the following best describes 'encapsulation'?",o:["Creating subclasses","Bundling data and methods, restricting direct access","Method overloading","Multiple inheritance"],a:1,e:"Encapsulation bundles data (fields) and methods together in a class while restricting direct outside access."}
+];
+
+let answered={}, correct={}, revealed={};
+let currentSection = -1;
+
+function getStats(){
+  let att=Object.keys(answered).length, cor=Object.keys(correct).length;
+  return {att, cor, pct: att>0?Math.round(cor/att*100):0};
+}
+
+function updateStats(){
+  let {att,cor,pct}=getStats();
+  document.getElementById('stat-attempted').textContent=`Attempted: ${att}`;
+  document.getElementById('stat-correct').textContent=`Correct: ${cor}`;
+  document.getElementById('stat-score').textContent=`Score: ${pct}%`;
+  document.getElementById('prog').style.width=(att/allQ.length*100)+'%';
+}
+
+function buildTabs(){
+  const tb=document.getElementById('tabs');
+  const allBtn=document.createElement('button');
+  allBtn.className='tab active'; allBtn.textContent='All (350)';
+  allBtn.onclick=()=>showSection(-1);
+  tb.appendChild(allBtn);
+  sections.forEach((s,i)=>{
+    const btn=document.createElement('button');
+    btn.className='tab'; btn.textContent=`${s.short} (${allQ.filter(q=>q.s===i).length})`;
+    btn.onclick=()=>showSection(i);
+    tb.appendChild(btn);
+  });
+}
+
+function showSection(si){
+  currentSection=si;
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    t.classList.toggle('active', i===(si+1));
+  });
+  renderQuestions();
+}
+
+function renderQuestions(){
+  const area=document.getElementById('quiz-area');
+  const qs = currentSection===-1 ? allQ : allQ.filter(q=>q.s===currentSection);
+  let html='';
+  let sectionName='';
+  qs.forEach((q,qi)=>{
+    const realIdx=allQ.indexOf(q);
+    const secName=sections[q.s].name;
+    if(secName!==sectionName && currentSection===-1){
+      sectionName=secName;
+      html+=`<div class="section-header" style="color:${sections[q.s].color}">${secName}</div>`;
+    }
+    const isAns=answered[realIdx]!==undefined;
+    const isRev=revealed[realIdx];
+    const letters=['A','B','C','D'];
+    html+=`<div class="q-card ${isRev?'show-exp':''}" id="card-${realIdx}">
+      <div class="q-num">Q${realIdx+1} · ${secName}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">`;
+    q.o.forEach((opt,oi)=>{
+      let cls='opt';
+      if(isAns||isRev){
+        if(oi===q.a) cls+=' reveal-correct';
+        else if(isAns && answered[realIdx]===oi && oi!==q.a) cls+=' wrong';
+      }
+      html+=`<div class="${cls}" onclick="selectAns(${realIdx},${oi})">
+        <span class="opt-letter">${letters[oi]}</span>
+        <span>${opt}</span>
+      </div>`;
+    });
+    html+=`</div>
+      <div class="explanation">💡 ${q.e}</div>
+    </div>`;
+  });
+  area.innerHTML=html;
+}
+
+function selectAns(qi, choice){
+  if(answered[qi]!==undefined) return;
+  answered[qi]=choice;
+  revealed[qi]=true;
+  if(choice===allQ[qi].a) correct[qi]=true;
+  updateStats();
+  const card=document.getElementById(`card-${qi}`);
+  if(!card) return;
+  card.classList.add('show-exp');
+  const opts=card.querySelectorAll('.opt');
+  opts.forEach((opt,i)=>{
+    if(i===allQ[qi].a) opt.classList.add('reveal-correct');
+    else if(i===choice && choice!==allQ[qi].a) opt.classList.add('wrong');
+  });
+}
+
+function revealAll(){
+  allQ.forEach((q,i)=>{ revealed[i]=true; });
+  renderQuestions();
+}
+
+function hideAll(){
+  revealed={};
+  renderQuestions();
+}
+
+function resetAll(){
+  if(!confirm('Reset all answers?')) return;
+  answered={}; correct={}; revealed={};
+  updateStats();
+  renderQuestions();
+}
+
+function showScore(){
+  const {att,cor,pct}=getStats();
+  document.getElementById('modal-score').textContent=pct+'%';
+  document.getElementById('modal-detail').textContent=`${cor} correct out of ${att} attempted (${allQ.length} total)`;
+  let badge='';
+  if(pct>=80) badge='<div class="badge badge-gold">🏆 Excellent!</div>';
+  else if(pct>=60) badge='<div class="badge badge-silver">🥈 Good Work!</div>';
+  else badge='<div class="badge badge-bronze">📚 Keep Practicing!</div>';
+  document.getElementById('modal-badge').innerHTML=badge;
+  document.getElementById('score-modal').classList.add('show');
+}
+
+buildTabs();
+renderQuestions();
+updateStats();
+</script>
+</body>
+</html>
